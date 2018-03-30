@@ -1,20 +1,26 @@
 <?php
-$dirURI = get_template_directory_uri() . '/' . basename(__DIR__);
+define("LOADER_URI", get_template_directory_uri() . '/' . basename(__DIR__));
 
-function components_loader_format_script_tag($input) {
+$loadedTemplates = array();
+
+function components_loader_format_script_tag($output, $handle, $src) {
+    global $loadedTemplates;
+
     // if path is for components folder
-    if (str_pos($input, $dirURI) !== false) {
-
-        
-        $input = str_replace("type='text/javascript' ", '', $input);
-        return str_replace("'", '"', $input);
-    } 
-  
+    if (strpos($src, LOADER_URI) !== false) {
+        $scriptTmpl = '<script type="module" src="%s"></script>';
+        $output = sprintf($scriptTmpl, esc_url($src));
+        if (!in_array($handle, $loadedTemplates)) {
+            $themePath = get_template_directory();
+            $themePath = str_replace(ABSPATH, '', $themePath);
+            $scriptPath = parse_url($src);
+            $scriptName = basename($scriptPath['path']);
+            $tmplPath = str_replace($scriptName, 'template.html', $scriptPath['path']);
+            $tmplPath = str_replace($themePath, '', $tmplPath);
+            $output .= "\n\n" . require($themePath . $tmplPath);
+            array_push($loadedTemplates, $handle);
+        }
+    }
+    return $output;
 }
-add_filter('script_loader_tag', 'components_loader_format_script_tag');
-
-// wp_enqueue_script(
-//     'twenty-post',
-//     get_theme_file_uri('/components/twenty-post/index.js' ),
-//     array( 'jquery' ), '1.0', true
-// );
+add_filter('script_loader_tag', 'components_loader_format_script_tag', 10, 3);

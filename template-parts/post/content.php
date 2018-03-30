@@ -10,9 +10,17 @@
  * @version 1.2
  */
 
+ // Add Post Component
+ wp_enqueue_script(
+    'twenty-post',
+	get_theme_file_uri('/components/twenty-post/index.js' ),
+	array(),
+	'1.0',
+	true
+);
 ?>
 
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+<twenty-post id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<?php
 	if ( is_sticky() && is_home() ) :
 		echo twentyseventeen_get_svg( array( 'icon' => 'thumb-tack' ) );
@@ -72,4 +80,4 @@
 	}
 	?>
 
-</article><!-- #post-## -->
+</twenty-post><!-- #post-## -->

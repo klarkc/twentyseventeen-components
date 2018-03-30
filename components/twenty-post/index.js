@@ -1,4 +1,5 @@
 export default {
+    template: '#twenty-post',
     data: function() {
         return {
             loading: false
