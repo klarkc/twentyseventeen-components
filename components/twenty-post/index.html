@@ -1,8 +1,11 @@
 <template id="twenty-post">
     <div>
-        <div class="loader" v-if="loading">Loading post...</div>
+        <div class="loader" v-if="!visible">
+            Post is hidden
+            <button @click="visible = true">Click to reveal</button>
+        </div>
         <article>
-            <slot v-if="!loading"></slot>
+            <slot v-if="visible"></slot>
         </article>
         
         <style>

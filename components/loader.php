@@ -5,7 +5,8 @@ $registeredModules = array();
 
 $dependencies = array(
     'https://unpkg.com/@webcomponents/webcomponentsjs@1.1.1/webcomponents-loader.js' => false,
-    'https://unpkg.com/vue@2.5.16/dist/vue.js' => false,
+    // 'https://unpkg.com/vue@2.5.16/dist/vue.js' => false,
+    get_template_directory_uri(). '/assets/js/vue.js' => false,
     'https://unpkg.com/@vue/web-component-wrapper@1.2.0/dist/vue-wc-wrapper.global.js' => false,
 );
 
@@ -17,6 +18,10 @@ function components_loader_get_register($src, $handle) {
         function registerComponent() {
             // At this point we are guaranteed that all required polyfills have loaded,
             // all HTML imports have loaded, and all defined custom elements have upgraded
+            const template = document.querySelector('#<?php echo $handle; ?>');
+            const res = Vue.compile(template.innerHTML, {hasShadowRoot: true});
+            Component.render = res.render;
+            Component.staticRenderFns = res.staticRenderFns;
             const CustomElement = wrapVueWebComponent(Vue, Component);
             customElements.define('<?php echo $handle; ?>', CustomElement);
             console.assert(
