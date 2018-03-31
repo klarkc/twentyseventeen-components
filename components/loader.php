@@ -1,7 +1,7 @@
 <?php
 define("LOADER_URI", get_template_directory_uri() . '/' . basename(__DIR__));
 
-$loadedModules = array();
+$registeredModules = array();
 
 $dependencies = array(
     'https://unpkg.com/@webcomponents/webcomponentsjs@1.1.1/webcomponents-loader.js' => false,
@@ -9,23 +9,37 @@ $dependencies = array(
     'https://unpkg.com/@vue/web-component-wrapper@1.2.0/dist/vue-wc-wrapper.global.js' => false,
 );
 
-function components_loader_get_register($module) {
+function components_loader_get_register($src, $handle) {
     ob_start();
     ?>
-    <script>
-        window.addEventListener('WebComponentsReady', function() {
+    <script type="module">
+        import Component from '<?php echo esc_url($src); ?>';
+        function registerComponent() {
             // At this point we are guaranteed that all required polyfills have loaded,
             // all HTML imports have loaded, and all defined custom elements have upgraded
-            let ElementClass = customElements.get('<?php echo $module; ?>');
-            let element = document.querySelector('<?php echo $module; ?>');
-            console.assert(element instanceof ElementClass);  // 👍
-        });
+            const CustomElement = wrapVueWebComponent(Vue, Component);
+            customElements.define('<?php echo $handle; ?>', CustomElement);
+            console.assert(
+                document.querySelector('<?php echo $handle; ?>')
+                instanceof CustomElement
+            );
+        }
+
+        if (window.WebComponents.ready) {
+            registerComponent();
+        } else {
+            window.addEventListener('WebComponentsReady', registerComponent);
+        }
     </script>
-    <?
-    return ob_end_clean();
+    <?php
+    $output = ob_get_clean();
+    ob_end_flush();
+    return $output;
 }
 
 function components_loader_get_dependencies() {
+    global $dependencies;
+    
     $output = '';
     $scriptTmpl = '<script type="text/javascript" src="%s"></script>';
     foreach($dependencies as $dep => $loaded) {
@@ -49,31 +63,33 @@ function components_loader_get_template($src, $handle) {
     $scriptName = basename($scriptPath['path']);
     $tmplPath = str_replace($scriptName, 'template.html', $scriptPath['path']);
     $tmplPath = str_replace($themePath, '', $tmplPath);
-    array_push($loadedModules, $handle);
     return require($themePath . $tmplPath);
 }
 
 function components_loader_format_script_tag($output, $handle, $src) {
-    global $loadedModules;
-
+    global $registeredModules;
+    
     // must load if path is for components folder
-    // and components is still not loaded
+    // and the component is still not loaded
     $mustLoad = (
         strpos($src, LOADER_URI) !== false &&
-        !in_array($handle, $loadedModules)
+        !in_array($handle, $registeredModules)
     );
     if ($mustLoad) {
         // erase loading script
         $output = '';
-
+        
         // load global dependencies
         $output .= components_loader_get_dependencies();
-
-        // load module
-        $output .= components_loader_get_module($src);
-
+        
+        // load module register
+        $output .= components_loader_get_register($src, $handle);
+        
         // load template
         $output .= components_loader_get_template($src, $handle);
+        
+        // do not repeat the load in future
+        array_push($registeredModules, $handle);
     }
     return $output;
 }

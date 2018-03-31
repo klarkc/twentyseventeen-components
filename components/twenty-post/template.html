@@ -1,12 +1,14 @@
 <template id="twenty-post">
-    <article>
+    <div>
         <div class="loader" v-if="loading">Loading post...</div>
-        <slot v-if="!loading"></slot>
-    </article>
-
-    <style>
-        .loader {
-            color: red;
-        }
-    </style>
+        <article>
+            <slot v-if="!loading"></slot>
+        </article>
+        
+        <style>
+            .loader {
+                color: red;
+            }
+        </style>
+    </div>
 </template>
