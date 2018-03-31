@@ -1,16 +1,16 @@
 <template id="twenty-post">
     <div>
-        <div class="loader" v-if="!visible">
+        <p class="loader" v-if="!visible">
             Post is hidden
             <button @click="visible = true">Click to reveal</button>
-        </div>
+        </p>
         <article>
             <slot v-if="visible"></slot>
         </article>
         
         <style>
-            .loader {
-                color: red;
+            p {
+                color: red !important;
             }
         </style>
     </div>
