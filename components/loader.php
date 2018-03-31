@@ -60,8 +60,9 @@ function components_loader_get_template($src, $handle) {
     $themePath = get_template_directory();
     $themePath = str_replace(ABSPATH, '', $themePath);
     $scriptPath = parse_url($src);
-    $scriptName = basename($scriptPath['path']);
-    $tmplPath = str_replace($scriptName, 'template.html', $scriptPath['path']);
+    $search = basename($scriptPath['path']);
+    $replace = basename($scriptPath['path'], '.js') . '.html';
+    $tmplPath = str_replace($search, $replace, $scriptPath['path']);
     $tmplPath = str_replace($themePath, '', $tmplPath);
     return require($themePath . $tmplPath);
 }
