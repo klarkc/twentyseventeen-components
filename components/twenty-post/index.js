@@ -1,11 +1,11 @@
 export default {
     template: '#twenty-post',
-    data: function() {
+    data() {
         return {
             loading: false
         }
     },
-    mounted: function() {
+    mounted() {
         setTimeout(function() {
             this.loading = true
         }, 3000)
