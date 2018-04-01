@@ -3,17 +3,12 @@ define("LOADER_URI", get_template_directory_uri() . '/' . basename(__DIR__));
 
 $registeredModules = array();
 
-$dependencies = array(
-    'https://unpkg.com/@webcomponents/webcomponentsjs/webcomponents-loader.js' => false,
-    // 'https://unpkg.com/vue' => false,
-    get_template_directory_uri(). '/assets/js/vue.js' => false,
-    'https://unpkg.com/@vue/web-component-wrapper/vue-wc-wrapper.global.js' => false,
-);
-
 function components_loader_get_register($src, $handle) {
     ob_start();
     ?>
     <script type="module">
+        import '<?php echo LOADER_URI; ?>/../assets/js/webcomponents-loader.js';
+        import '<?php echo LOADER_URI; ?>/../assets/js/vue.js';
         import Component from '<?php echo esc_url($src); ?>';
         function registerComponent() {
             // At this point we are guaranteed that all required polyfills have loaded,
@@ -39,20 +34,6 @@ function components_loader_get_register($src, $handle) {
     <?php
     $output = ob_get_clean();
     ob_end_flush();
-    return $output;
-}
-
-function components_loader_get_dependencies() {
-    global $dependencies;
-    
-    $output = '';
-    $scriptTmpl = '<script type="text/javascript" src="%s"></script>';
-    foreach($dependencies as $dep => $loaded) {
-        if ($loaded === true) continue;
-        $output .= sprintf($scriptTmpl, $dep);
-        $dependencies[$dep] = true;
-    }
-
     return $output;
 }
 
@@ -84,9 +65,6 @@ function components_loader_format_script_tag($output, $handle, $src) {
     if ($mustLoad) {
         // erase loading script
         $output = '';
-        
-        // load global dependencies
-        $output .= components_loader_get_dependencies();
         
         // load module register
         $output .= components_loader_get_register($src, $handle);

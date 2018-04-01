@@ -1,5 +1,4 @@
-import CommentGrid from 'https://unpkg.com/vue-comment-grid';
-import 'https://unpkg.com/axios';
+import CommentGrid from '../../assets/js/vue-comment-grid.js';
 
 Vue.use(CommentGrid);
 
