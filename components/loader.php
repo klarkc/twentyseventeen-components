@@ -8,16 +8,19 @@ function components_loader_get_register($src, $handle) {
     ?>
     <script type="text/javascript" src="<?php echo LOADER_URI; ?>/../assets/js/webcomponents-loader.js"></script>;
     <script type="text/javascript" src="<?php echo LOADER_URI; ?>/../assets/js/vue.js"></script>;
-    <script type="text/javascript">
+    <script type="text/javascript" src="<?php echo LOADER_URI; ?>/../assets/js/vue-wc-wrapper.global.js"></script>;
+    <script type="module">
         // async load component
         function loadComponent() {
-            const path = '<?php echo esc_url($src); ?>';
+            const doLoad = () =>
+                import('<?php echo esc_url($src); ?>')
+                .then(mod => mod.default);
             if(window.WebComponents.ready) {
-                return import(path);
+                return doLoad();
             } else {
                 return new Promise(
                     resolve => window.addEventListener('WebComponentsReady', resolve)
-                ).then(()=> import(path));
+                ).then(doLoad);
             }
         }
         
