@@ -4,10 +4,10 @@ define("LOADER_URI", get_template_directory_uri() . '/' . basename(__DIR__));
 $registeredModules = array();
 
 $dependencies = array(
-    'https://unpkg.com/@webcomponents/webcomponentsjs@1.1.1/webcomponents-loader.js' => false,
-    // 'https://unpkg.com/vue@2.5.16/dist/vue.js' => false,
+    'https://unpkg.com/@webcomponents/webcomponentsjs/webcomponents-loader.js' => false,
+    // 'https://unpkg.com/vue' => false,
     get_template_directory_uri(). '/assets/js/vue.js' => false,
-    'https://unpkg.com/@vue/web-component-wrapper@1.2.0/dist/vue-wc-wrapper.global.js' => false,
+    'https://unpkg.com/@vue/web-component-wrapper/vue-wc-wrapper.global.js' => false,
 );
 
 function components_loader_get_register($src, $handle) {
