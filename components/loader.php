@@ -6,11 +6,23 @@ $registeredModules = array();
 function components_loader_get_register($src, $handle) {
     ob_start();
     ?>
-    <script type="module">
-        import '<?php echo LOADER_URI; ?>/../assets/js/webcomponents-loader.js';
-        import '<?php echo LOADER_URI; ?>/../assets/js/vue.js';
-        import Component from '<?php echo esc_url($src); ?>';
-        function registerComponent() {
+    <script type="text/javascript" src="<?php echo LOADER_URI; ?>/../assets/js/webcomponents-loader.js"></script>;
+    <script type="text/javascript" src="<?php echo LOADER_URI; ?>/../assets/js/vue.js"></script>;
+    <script type="text/javascript">
+        // async load component
+        function loadComponent() {
+            const path = '<?php echo esc_url($src); ?>';
+            if(window.WebComponents.ready) {
+                return import(path);
+            } else {
+                return new Promise(
+                    resolve => window.addEventListener('WebComponentsReady', resolve)
+                ).then(()=> import(path));
+            }
+        }
+        
+        // register as web component
+        function registerComponent(Component) {
             // At this point we are guaranteed that all required polyfills have loaded,
             // all HTML imports have loaded, and all defined custom elements have upgraded
             const template = document.querySelector('#<?php echo $handle; ?>');
@@ -25,11 +37,7 @@ function components_loader_get_register($src, $handle) {
             );
         }
 
-        if (window.WebComponents.ready) {
-            registerComponent();
-        } else {
-            window.addEventListener('WebComponentsReady', registerComponent);
-        }
+        loadComponent().then(registerComponent);
     </script>
     <?php
     $output = ob_get_clean();
