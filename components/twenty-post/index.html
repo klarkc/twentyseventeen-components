@@ -1,17 +1,15 @@
 <template id="twenty-post">
-    <div>
-        <p class="loader" v-if="!visible">
-            Post is hidden
-            <button @click="visible = true">Click to reveal</button>
-        </p>
-        <article>
-            <slot v-if="visible"></slot>
-        </article>
-        
+    <article>
+        <div class="entry-header">
+            <slot name="entry-header"></slot>
+        </div>
+        <div class="entry-content" @mouseup="commentSelection">
+            <slot name="entry-content"></slot>
+        </div>
         <style>
-            p {
-                color: red !important;
+            .entry-content p {
+                font-style: italic;
             }
         </style>
-    </div>
+    </article>
 </template>

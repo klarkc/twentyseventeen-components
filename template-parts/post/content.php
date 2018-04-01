@@ -26,7 +26,7 @@
 		echo twentyseventeen_get_svg( array( 'icon' => 'thumb-tack' ) );
 	endif;
 	?>
-	<header class="entry-header">
+	<header slot="entry-header">
 		<?php
 		if ( 'post' === get_post_type() ) {
 			echo '<div class="entry-meta">';
@@ -57,7 +57,7 @@
 		</div><!-- .post-thumbnail -->
 	<?php endif; ?>
 
-	<div class="entry-content">
+	<div slot="entry-content">
 		<?php
 		/* translators: %s: Name of current post */
 		the_content( sprintf(
