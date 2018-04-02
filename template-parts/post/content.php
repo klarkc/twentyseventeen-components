@@ -14,7 +14,10 @@
  wp_enqueue_script('twenty-post');
  ?>
 
-<twenty-post id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+<twenty-post
+	id="post-<?php the_ID(); ?>"
+	<?php post_class(); ?>
+	is-single="<?php echo is_single(); ?>">
 	<?php
 	if ( is_sticky() && is_home() ) :
 		echo twentyseventeen_get_svg( array( 'icon' => 'thumb-tack' ) );
