@@ -1,14 +1,31 @@
 <?php
 define("LOADER_URI", get_template_directory_uri() . '/' . basename(__DIR__));
+define("ASSETS_URI", get_template_directory_uri() . '/assets');
 
 $registeredModules = array();
+
+$coreDeps = array(
+    ASSETS_URI . '/js/webcomponents-loader.js' => false,
+    ASSETS_URI . '/js/vue.js' => false,
+    ASSETS_URI . '/js/vue-wc-wrapper.global.js' => false,
+);
+
+function components_loader_get_dependencies() {
+    global $coreDeps;
+    
+    $output = '';
+    $scriptTmpl = '<script type="text/javascript" src="%s"></script>';
+    foreach($coreDeps as $dep => $loaded) {
+        if ($loaded === true) continue;
+        $output .= sprintf($scriptTmpl, $dep);
+        $coreDeps[$dep] = true;
+    }
+    return $output;
+}
 
 function components_loader_get_register($src, $handle) {
     ob_start();
     ?>
-    <script type="text/javascript" src="<?php echo LOADER_URI; ?>/../assets/js/webcomponents-loader.js"></script>;
-    <script type="text/javascript" src="<?php echo LOADER_URI; ?>/../assets/js/vue.js"></script>;
-    <script type="text/javascript" src="<?php echo LOADER_URI; ?>/../assets/js/vue-wc-wrapper.global.js"></script>;
     <script type="module">
         // async load component
         function loadComponent() {
@@ -48,11 +65,6 @@ function components_loader_get_register($src, $handle) {
     return $output;
 }
 
-function components_loader_get_module($src) {
-    $moduleTmpl = '<script type="module" src="%s"></script>';
-    return sprintf($moduleTmpl, esc_url($src));
-}
-
 function components_loader_get_template($src, $handle) {
     $themePath = get_template_directory();
     $themePath = str_replace(ABSPATH, '', $themePath);
@@ -76,6 +88,9 @@ function components_loader_format_script_tag($output, $handle, $src) {
     if ($mustLoad) {
         // erase loading script
         $output = '';
+
+        // load core loader dependencies
+        $output .= components_loader_get_dependencies();
         
         // load module register
         $output .= components_loader_get_register($src, $handle);
@@ -89,3 +104,9 @@ function components_loader_format_script_tag($output, $handle, $src) {
     return $output;
 }
 add_filter('script_loader_tag', 'components_loader_format_script_tag', 10, 3);
+
+// load registers
+$registers = glob(__DIR__ . '/*/register.php');
+foreach ($registers as $register) {
+    require($register);
+}

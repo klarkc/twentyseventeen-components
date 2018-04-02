@@ -10,9 +10,9 @@
  * @version 1.2
  */
 
- // Add Post Component
- wp_enqueue_script('twenty-post', get_theme_file_uri('/components/twenty-post/index.js' ));
-?>
+ // Import Post Component
+ wp_enqueue_script('twenty-post');
+ ?>
 
 <twenty-post id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<?php
