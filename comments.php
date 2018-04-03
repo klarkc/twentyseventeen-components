@@ -23,13 +23,8 @@ if ( post_password_required() ) {
 }
 ?>
 
-<div id="comments" class="comments-area">
-
-	<?php
-	// You can start editing here -- including this comment!
-	if ( have_comments() ) :
-	?>
-	<twenty-comments post-id="post-<?php the_ID();?>"/>
-	<?php endif; ?>
-
-</div><!-- #comments -->
+<twenty-comments
+	post-id="post-<?php the_ID();?>"
+	id="comments"
+	class="comments-area">
+</twenty-comments>
