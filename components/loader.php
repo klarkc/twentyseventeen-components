@@ -2,23 +2,20 @@
 define("ASSETS_URI", get_template_directory_uri() . '/assets');
 
 // register vue and global plugins
-wp_register_script('httpVueLoader', ASSETS_URI . '/js/http-vue-loader.js');
-wp_register_script('vue-comment-grid', ASSETS_URI . '/js/vue-comment-grid.js');
-wp_register_script('v-tooltip', ASSETS_URI . '/js/v-tooltip.min.js');
-wp_register_script('debounce', ASSETS_URI . '/js/debounce.js');
+wp_register_script('httpVueLoader', ASSETS_URI . '/js/http-vue-loader.js', array(), '1.0', true);
+wp_register_script('vue-comment-grid', ASSETS_URI . '/js/vue-comment-grid.js', array(), '1.0', true);
+wp_enqueue_script('debounce', ASSETS_URI . '/js/debounce.js', array(), '1.0', true);
+wp_register_script('vue', ASSETS_URI . '/js/vue.js', array(), '1.0', true);
 
-$plugins = array(
+$deps = array(
+    'vue',
     'httpVueLoader',
     'vue-comment-grid',
-    'v-tooltip',
     'debounce',
-);
-wp_register_script('vue', ASSETS_URI . '/js/vue.js', 
-    $plugins
 );
 
 // register and enqueue app
-wp_enqueue_script('app', ASSETS_URI . '/js/app.js', array('vue'));
+wp_enqueue_script('app', ASSETS_URI . '/js/app.js', $deps, '1.0', true);
 
 // init app
 function loader_init_app() {
@@ -34,7 +31,9 @@ function loader_init_app() {
     ob_start();
     ?>
     <script type="text/javascript">
-    window.initApp(<?php echo json_encode($components); ?>);
+    window.addEventListener('DOMContentLoaded', () => {
+        window.initApp(<?php echo json_encode($components); ?>);
+    })
     </script>
     <?php
     $output = ob_get_clean();
