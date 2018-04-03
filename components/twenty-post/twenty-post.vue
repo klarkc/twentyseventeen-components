@@ -34,7 +34,7 @@ module.exports = {
       const el = this.$el;
       const rect = el.getBoundingClientRect();
       return (
-        rect.top + rect.height * 0.9 >= 0 &&
+        rect.top + rect.height * 0.4 >= 0 &&
         rect.left + rect.width * 0.9 >= 0 &&
         rect.bottom - rect.height * 0.9 <=
           (window.innerHeight || document.documentElement.clientHeight) &&
@@ -54,7 +54,7 @@ module.exports = {
           } else {
             this.inViewport = false;
           }
-        }, 50)
+        }, 30)
       );
     }
   },
