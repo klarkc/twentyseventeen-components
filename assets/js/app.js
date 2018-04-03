@@ -6,7 +6,7 @@
     
     window.initApp = (components) => { 
         new Vue({
-            el: '.app',
+            el: '.site',
             name: 'App',
             components,
         })

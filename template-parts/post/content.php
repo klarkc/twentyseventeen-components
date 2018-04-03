@@ -10,14 +10,12 @@
  * @version 1.2
  */
 
- // Import Post Component
- wp_enqueue_script('twenty-post');
  ?>
 
 <twenty-post
 	id="post-<?php the_ID(); ?>"
 	<?php post_class(); ?>
-	is-single="<?php echo is_single(); ?>">
+	:is-single="<?php echo json_encode(is_single()); ?>">
 	<?php
 	if ( is_sticky() && is_home() ) :
 		echo twentyseventeen_get_svg( array( 'icon' => 'thumb-tack' ) );
