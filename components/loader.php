@@ -5,7 +5,12 @@ define("ASSETS_URI", get_template_directory_uri() . '/assets');
 wp_register_script('httpVueLoader', ASSETS_URI . '/js/http-vue-loader.js');
 wp_register_script('vue-comment-grid', ASSETS_URI . '/js/vue-comment-grid.js');
 wp_register_script('v-tooltip', ASSETS_URI . '/js/v-tooltip.min.js');
-$plugins = array('httpVueLoader', 'vue-comment-grid', 'v-tooltip');
+
+$plugins = array(
+    'httpVueLoader',
+    'vue-comment-grid',
+    'v-tooltip',
+);
 wp_register_script('vue', ASSETS_URI . '/js/vue.js', 
     $plugins
 );
