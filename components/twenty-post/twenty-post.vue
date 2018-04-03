@@ -1,15 +1,17 @@
 <template>
     <div :style="containerStyle">
-        <transition name="slide-fade">
-            <article v-if="inViewport">
-                    <div class="entry-header">
+            <article>
+                <transition name="slide-right">
+                    <div class="entry-header" v-if="inViewport">
                         <slot name="entry-header"></slot>
                     </div>
-                <div class="entry-content">
+                </transition>
+                <transition name="slide-left">
+                <div class="entry-content" v-if="inViewport">
                     <slot name="entry-content"></slot>
                 </div>
+                </transition>
             </article>
-        </transition>
     </div>
 </template>
 
@@ -42,6 +44,7 @@ module.exports = {
     },
     setAnimation() {
       this.containerStyle.minHeight = this.$el.clientHeight + "px";
+      this.containerStyle.overflow = 'hidden';
       this.inViewport = false;
       window.addEventListener(
         "scroll",
@@ -66,15 +69,28 @@ module.exports = {
   font-style: italic;
 }
 
-.slide-fade-enter-active {
+.slide-left-enter-active,
+.slide-right-enter-active {
   transition: all 0.3s ease;
 }
-.slide-fade-leave-active {
+.slide-left-leave-active,
+.slide-right-leave-active {
   transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
-.slide-fade-enter,
-.slide-fade-leave-to {
-  transform: translateX(-50%);
+.slide-left-enter,
+.slide-left-leave-to,
+.slide-right-enter,
+.slide-right-leave-to {
   opacity: 0;
+}
+
+.slide-left-enter,
+.slide-left-leave-to {
+  transform: translateX(-50%);
+}
+
+.slide-right-enter,
+.slide-right-leave-to {
+  transform: translateX(50%);
 }
 </style>
