@@ -63,6 +63,10 @@ module.exports = {
     }
   },
   mounted() {
+    // checamos a prop passada no
+    // content.php e chamamos
+    // setAnimation que vai
+    // configurar os nossos listeners
     if (!this.isSingle) this.setAnimation();
   }
 };
