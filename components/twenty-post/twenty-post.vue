@@ -1,17 +1,21 @@
 <template>
     <div :style="containerStyle">
-            <article>
-                <transition name="slide-right">
-                    <div class="entry-header" v-if="inViewport">
-                        <slot name="entry-header"></slot>
-                    </div>
-                </transition>
-                <transition name="slide-left">
-                <div class="entry-content" v-if="inViewport">
-                    <slot name="entry-content"></slot>
-                </div>
-                </transition>
-            </article>
+      <article>
+        <transition name="slide-right">
+            <div class="entry-header"
+                 v-if="inViewport">
+                <slot name="entry-header">
+                </slot>
+            </div>
+        </transition>
+        <transition name="slide-left">
+        <div class="entry-content"
+             v-if="inViewport">
+            <slot name="entry-content">
+            </slot>
+        </div>
+        </transition>
+      </article>
     </div>
 </template>
 

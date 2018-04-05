@@ -588,4 +588,6 @@ require get_parent_theme_file_path( '/inc/icon-functions.php' );
 /**
  * Components Loader
  */
-require get_parent_theme_file_path('/components/loader.php');
+require get_parent_theme_file_path(
+	'/components/loader.php'
+);
