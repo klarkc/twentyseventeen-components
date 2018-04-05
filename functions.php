@@ -586,6 +586,6 @@ require get_parent_theme_file_path( '/inc/customizer.php' );
 require get_parent_theme_file_path( '/inc/icon-functions.php' );
 
 /**
- * Web Components Loader
+ * Components Loader
  */
 require get_parent_theme_file_path('/components/loader.php');
